@@ -1,0 +1,20 @@
+{
+  "name": "twinrx",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=@twinrx/api",
+    "dev:web": "npm run dev --workspace=@twinrx/web",
+    "seed": "npm run seed --workspace=@twinrx/api",
+    "build": "npm run build --workspace=@twinrx/api && npm run build --workspace=@twinrx/web"
+  },
+  "allowScripts": {
+    "argon2@0.40.3": true,
+    "esbuild@0.28.2": true,
+    "esbuild@0.21.5": true
+  }
+}

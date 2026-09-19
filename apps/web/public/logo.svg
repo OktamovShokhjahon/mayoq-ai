@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="MAYOQ AI">
+  <defs>
+    <linearGradient id="mq-navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#20499C"/>
+      <stop offset="1" stop-color="#15306B"/>
+    </linearGradient>
+    <linearGradient id="mq-gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE07A"/>
+      <stop offset="0.5" stop-color="#FFC81F"/>
+      <stop offset="1" stop-color="#F2A900"/>
+    </linearGradient>
+    <linearGradient id="mq-beam-l" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#FFC81F" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mq-beam-r" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFC81F" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="mq-glow">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.45" stop-color="#FFE07A"/>
+      <stop offset="1" stop-color="#FFC81F" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="mq-tower">
+      <path d="M28.4 15h7.2l1.6 29.6L32 56l-5.2-11.4z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Beams leaving the lantern. -->
+  <path d="M28.8 6.2 0.8 0.4 0.2 8.6 28.8 11.8z" fill="url(#mq-beam-l)"/>
+  <path d="M35.2 6.2 63.2 0.4 63.8 8.6 35.2 11.8z" fill="url(#mq-beam-r)"/>
+
+  <!-- The letter M. -->
+  <g fill="url(#mq-navy)">
+    <path d="M6 56V18h11l15 30v8h-5L16 35v21z"/>
+    <path d="M58 56V18H47L32 48v8h5l11-21v21z"/>
+  </g>
+
+  <!-- Tower, with the helix running through it. -->
+  <path d="M28.4 15h7.2l1.6 29.6L32 56l-5.2-11.4z" fill="url(#mq-navy)"/>
+  <g clip-path="url(#mq-tower)" fill="none" stroke-linecap="round">
+    <path d="M32 16c5 4 5 8 0 12s-5 8 0 12 5 8 0 12" stroke="url(#mq-gold)" stroke-width="1.9"/>
+    <path d="M32 16c-5 4-5 8 0 12s5 8 0 12-5 8 0 12" stroke="#F3F7FF" stroke-width="1.9"/>
+    <g stroke="url(#mq-gold)" stroke-width="1.5">
+      <path d="M29.6 19h4.8M28.6 22h6.8M29.6 25h4.8M29.6 31h4.8M28.6 34h6.8M29.6 37h4.8M29.6 43h4.8M28.6 46h6.8M30.2 49h3.6"/>
+    </g>
+  </g>
+
+  <!-- Gallery, lantern room and roof. -->
+  <rect x="26.2" y="12.6" width="11.6" height="2.8" rx="1.1" fill="url(#mq-navy)"/>
+  <rect x="27.8" y="5.6" width="8.4" height="7.2" rx="1.2" fill="url(#mq-gold)"/>
+  <circle cx="32" cy="9.2" r="4.6" fill="url(#mq-glow)"/>
+  <path d="M24.6 5.6 32 1.2l7.4 4.4z" fill="url(#mq-navy)"/>
+  <circle cx="32" cy="0.9" r="0.9" fill="url(#mq-navy)"/>
+</svg>

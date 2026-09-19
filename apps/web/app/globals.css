@@ -1,0 +1,344 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------------------------------------------------------
+   MAYOQ AI design tokens — industrial / utilitarian.
+
+   "Mayoq" is a lighthouse. The product throws a warning beam across dark water
+   before a ship finds rock, so the system reads as a marine instrument console:
+   cold steel ground, machined hairlines, monospace for every measured value,
+   and one hot lamp-orange that carries the identity.
+
+   Safety rule that governs the palette: the lamp is IDENTITY, never diagnosis.
+   It appears in chrome — mark, rail, focus, the twin's beam — and never as a
+   clinical grade. Green/amber/red own the data surfaces exclusively, so a warm
+   colour on a patient's chart always means the rules put it there.
+
+   Colours are stored as bare RGB channels. Tailwind reads them as
+   `rgb(var(--rgb-x) / <alpha-value>)`, which is what keeps `bg-ink/[0.035]`
+   and `border-state-red/40` working, and it means a theme only has to restate
+   this one list rather than every derived token.
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --font-display: "Archivo Variable";
+  --font-body: "Public Sans Variable";
+  --font-mono: "IBM Plex Mono";
+
+  --rgb-paper: 233 238 241;
+  --rgb-paper-deep: 215 223 228;
+  --rgb-surface: 255 255 255;
+  --rgb-sunken: 223 230 234;
+
+  --rgb-ink: 14 26 33;
+  --rgb-ink-muted: 70 97 110;
+  --rgb-ink-faint: 110 135 149;
+
+  /* Identity */
+  --rgb-lamp: 228 96 28;
+  --rgb-sea: 28 110 126;
+  --rgb-console: 11 20 25;
+
+  --rgb-signal: 28 110 126;
+  --rgb-electric: 20 39 47;
+  --rgb-ai: 86 120 138;
+  --rgb-navy: 11 20 25;
+  --rgb-navy-deep: 6 14 18;
+  /* On the dark stage the beam is the accent, so `cyan` now carries the lamp. */
+  --rgb-cyan: 255 138 69;
+
+  --rgb-state-green: 15 138 95;
+  --rgb-state-amber: 168 115 10;
+  --rgb-state-red: 201 58 70;
+
+  --line: rgba(14, 26, 33, 0.14);
+  --line-strong: rgba(14, 26, 33, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-line: rgba(255, 255, 255, 0.5);
+  --shadow-panel: 0 1px 0 rgba(14, 26, 33, 0.04), 0 10px 26px -18px rgba(14, 26, 33, 0.3);
+}
+
+/* Dark console. Applied when the viewer asked for dark, or when the system
+   prefers it and they have not explicitly chosen light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --rgb-paper: 10 17 22;
+    --rgb-paper-deep: 6 12 16;
+    --rgb-surface: 17 28 35;
+    --rgb-sunken: 13 23 29;
+
+    --rgb-ink: 220 230 236;
+    --rgb-ink-muted: 157 176 188;
+    --rgb-ink-faint: 122 143 156;
+
+    --rgb-lamp: 255 138 69;
+    --rgb-sea: 62 163 181;
+    --rgb-console: 6 12 16;
+
+    --rgb-signal: 62 163 181;
+    /* Primary actions keep white type, so this stays dark enough for it. */
+    --rgb-electric: 26 101 117;
+    --rgb-ai: 126 163 181;
+    --rgb-navy: 6 12 16;
+    --rgb-navy-deep: 3 7 10;
+    --rgb-cyan: 255 138 69;
+
+    --rgb-state-green: 53 181 133;
+    --rgb-state-amber: 217 161 58;
+    --rgb-state-red: 240 99 111;
+
+    --line: rgba(220, 234, 242, 0.13);
+    --line-strong: rgba(220, 234, 242, 0.28);
+    --glass-bg: rgba(17, 28, 35, 0.62);
+    --glass-line: rgba(220, 234, 242, 0.1);
+    --shadow-panel: 0 1px 0 rgba(0, 0, 0, 0.4), 0 10px 26px -18px rgba(0, 0, 0, 0.8);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --rgb-paper: 10 17 22;
+  --rgb-paper-deep: 6 12 16;
+  --rgb-surface: 17 28 35;
+  --rgb-sunken: 13 23 29;
+
+  --rgb-ink: 220 230 236;
+  --rgb-ink-muted: 157 176 188;
+  --rgb-ink-faint: 122 143 156;
+
+  --rgb-lamp: 255 138 69;
+  --rgb-sea: 62 163 181;
+  --rgb-console: 6 12 16;
+
+  --rgb-signal: 62 163 181;
+  --rgb-electric: 26 101 117;
+  --rgb-ai: 126 163 181;
+  --rgb-navy: 6 12 16;
+  --rgb-navy-deep: 3 7 10;
+  --rgb-cyan: 255 138 69;
+
+  --rgb-state-green: 53 181 133;
+  --rgb-state-amber: 217 161 58;
+  --rgb-state-red: 240 99 111;
+
+  --line: rgba(220, 234, 242, 0.13);
+  --line-strong: rgba(220, 234, 242, 0.28);
+  --glass-bg: rgba(17, 28, 35, 0.62);
+  --glass-line: rgba(220, 234, 242, 0.1);
+  --shadow-panel: 0 1px 0 rgba(0, 0, 0, 0.4), 0 10px 26px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* Derived once. These follow whichever theme is active, so no theme block
+   below ever has to restate them. */
+:root {
+  --paper: rgb(var(--rgb-paper));
+  --paper-deep: rgb(var(--rgb-paper-deep));
+  --surface: rgb(var(--rgb-surface));
+  --sunken: rgb(var(--rgb-sunken));
+
+  --ink: rgb(var(--rgb-ink));
+  --ink-muted: rgb(var(--rgb-ink-muted));
+  --ink-faint: rgb(var(--rgb-ink-faint));
+
+  --lamp: rgb(var(--rgb-lamp));
+  --lamp-deep: rgb(var(--rgb-lamp) / 0.34);
+  --sea: rgb(var(--rgb-sea));
+  --console: rgb(var(--rgb-console));
+
+  --signal: rgb(var(--rgb-signal));
+  --electric: rgb(var(--rgb-electric));
+  --ai: rgb(var(--rgb-ai));
+  --navy: rgb(var(--rgb-navy));
+  --navy-deep: rgb(var(--rgb-navy-deep));
+  --cyan: rgb(var(--rgb-cyan));
+
+  --state-green: rgb(var(--rgb-state-green));
+  --state-amber: rgb(var(--rgb-state-amber));
+  --state-red: rgb(var(--rgb-state-red));
+}
+
+body {
+  background-color: var(--paper);
+  /* A beam raking in from the top-right corner, and the light it throws on the
+     surface below it. Kept far below the threshold where it could be read as a
+     state colour on a clinical surface. */
+  background-image:
+    radial-gradient(ellipse 70% 50% at 100% 0%, var(--lamp-deep), transparent 62%),
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.55), transparent 60%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(228, 96, 28, 0.22);
+}
+
+/* Keyboard focus stays visible everywhere — clinical workflows are keyboard-heavy. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--lamp);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Navy rail: the product's identity, kept off the clinical surfaces. */
+  .navy-rail {
+    background:
+      radial-gradient(ellipse 130% 34% at 0% 0%, rgba(255, 138, 69, 0.16), transparent 62%),
+      linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  /* Glass: decorative panels only, never a surface carrying clinical values. */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-line);
+  }
+
+  /* Instrument surface: the default content plane. Square-ish corners and a
+     hairline do more of the work here than the shadow — a console panel is
+     machined into the surface, not floating above it. */
+  .panel {
+    @apply rounded-md border bg-surface;
+    border-color: var(--line);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .panel-sunken {
+    @apply rounded-lg border;
+    background: var(--sunken);
+    border-color: var(--line);
+  }
+
+  /* Monospace utility type: labels, units, versions, identifiers. */
+  .readout {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply text-[11px] uppercase tracking-[0.14em] text-ink-faint;
+  }
+
+  .readout-value {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    @apply tabular-nums;
+  }
+
+  .display {
+    font-family: var(--font-display), ui-sans-serif, sans-serif;
+    letter-spacing: -0.035em;
+    @apply font-semibold;
+  }
+
+  /* Hairline rail used to separate instrument sections. */
+  .rail {
+    height: 1px;
+    background: linear-gradient(to right, var(--line-strong), var(--line) 40%, transparent);
+  }
+}
+
+/* State emphasis. Never the only signal — always paired with text + icon. */
+.pulse-amber {
+  animation: pulse-amber 2.4s ease-in-out infinite;
+}
+.pulse-red {
+  animation: pulse-red 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 115, 10, 0.35); }
+  60% { box-shadow: 0 0 0 7px rgba(168, 115, 10, 0); }
+}
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 58, 70, 0.4); }
+  60% { box-shadow: 0 0 0 9px rgba(201, 58, 70, 0); }
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Scroll-reveal: set by IntersectionObserver in `useReveal`. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Range input styled as an instrument slider for the before/after morph. */
+input[type="range"].morph {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 24px;
+}
+input[type="range"].morph::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #c3d2e0, var(--signal));
+}
+input[type="range"].morph::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #c3d2e0, var(--signal));
+}
+input[type="range"].morph::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 6px;
+  border-radius: 2px;
+  background: var(--signal);
+  margin-top: -7.5px;
+  box-shadow: 0 1px 4px rgba(14, 127, 143, 0.5);
+  cursor: ew-resize;
+}
+input[type="range"].morph::-moz-range-thumb {
+  height: 18px;
+  width: 6px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--signal);
+  box-shadow: 0 1px 4px rgba(14, 127, 143, 0.5);
+  cursor: ew-resize;
+}
