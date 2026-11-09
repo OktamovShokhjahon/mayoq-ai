@@ -367,6 +367,12 @@ export const ru: Record<MessageKey, string> = {
   "twin.missingPrefix": "Не хватает:",
 
   "console.nothingWaiting": "Ничего не ожидает",
+  "console.clearQueues": "Свободно:",
+  "scenarioStatus.DRAFT": "Черновик",
+  "scenarioStatus.UNDER_REVIEW": "На рассмотрении",
+  "scenarioStatus.APPROVED": "Утверждено",
+  "scenarioStatus.REJECTED": "Отклонено",
+  "scenarioStatus.DISCONTINUED": "Отменено",
   "console.noAnalysesInRange": "В выбранном диапазоне анализов нет.",
   "console.nothingRecordedYet": "Пока ничего не записано.",
   "console.loading": "Загрузка",

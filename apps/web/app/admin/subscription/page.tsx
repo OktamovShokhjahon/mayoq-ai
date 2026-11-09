@@ -92,7 +92,6 @@ export default function AdminSubscriptionPage() {
   return (
     <AppShell role="ADMIN" navItems={ADMIN_NAV}>
       <PageHeader
-        eyebrow={t("as.eyebrow")}
         title={t("as.title")}
         description={t("as.description")}
         meta={

@@ -319,7 +319,7 @@ export default function LandingPage() {
           </h2>
         </Reveal>
 
-        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-signal">
+        <p className="mt-6 text-[13px] font-medium text-signal">
           {t("home.planTrial")}
         </p>
 

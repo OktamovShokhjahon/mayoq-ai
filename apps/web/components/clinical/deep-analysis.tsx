@@ -213,7 +213,7 @@ export function DeepAnalysis({
             {copy.scope.map((item) => (
               <li
                 key={item}
-                className="flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted"
+                className="flex items-center gap-1.5 rounded border px-2.5 py-1 text-[12px] font-medium text-ink-muted"
                 style={{ borderColor: "var(--line)" }}
               >
                 <Check className="h-3 w-3 text-signal" aria-hidden />

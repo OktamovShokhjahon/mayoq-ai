@@ -4,20 +4,21 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, ADMIN_NAV } from "@/components/ui/app-shell";
-import { RiskBadge } from "@/components/ui/risk-badge";
+import { RiskMarker } from "@/components/ui/risk-badge";
 import {
   DistributionBars,
   EmptyState,
   MetaItem,
   PageHeader,
   Panel,
-  QueueCard,
+  TriageBand,
+  ContextStats,
   RiskRibbon,
   Row,
 } from "@/components/ui/console";
 import { AnalysisTrend, type TrendPoint } from "@/components/charts/analysis-trend";
 import { api } from "@/lib/api-client";
-import { formatDateTime, humanizeEnum } from "@/lib/format";
+import { formatListDate, humanizeEnum } from "@/lib/format";
 import type { RiskColor } from "@/components/digital-twin/types";
 import { useI18n } from "@/lib/i18n";
 
@@ -65,7 +66,6 @@ export default function AdminDashboardPage() {
   return (
     <AppShell role="ADMIN" navItems={ADMIN_NAV}>
       <PageHeader
-        eyebrow={t("ad.eyebrow")}
         title={t("ad.title")}
         description={t("ad.description")}
         action={
@@ -106,30 +106,24 @@ export default function AdminDashboardPage() {
 
       {data && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            <QueueCard
-              label={t("ad.highPriorityAlerts")}
-              count={data.highRiskAlerts}
-              hint={t("ad.highPriorityHint")}
-              href="/admin/patients"
-              tone="red"
-              index={0}
-            />
-            <QueueCard
-              label={t("ad.activeDoctors")}
-              count={data.activeDoctors}
-              hint={t("ad.activeDoctorsHint")}
-              href="/admin/doctors"
-              kind="stat"
-              index={1}
-            />
-            <QueueCard
-              label={t("ad.activePatients")}
-              count={data.activePatients}
-              hint={t("ad.activePatientsHint")}
-              href="/admin/patients"
-              kind="stat"
-              index={2}
+          {/* One queue can need an administrator; headcounts never do. */}
+          <TriageBand
+            queues={[
+              {
+                label: t("ad.highPriorityAlerts"),
+                count: data.highRiskAlerts,
+                hint: t("ad.highPriorityHint"),
+                href: "/admin/patients",
+                tone: "red",
+              },
+            ]}
+          />
+          <div className="mt-4">
+            <ContextStats
+              items={[
+                { label: t("ad.activeDoctors"), value: String(data.activeDoctors) },
+                { label: t("ad.activePatients"), value: String(data.activePatients) },
+              ]}
             />
           </div>
 
@@ -164,7 +158,7 @@ export default function AdminDashboardPage() {
               action={
                 <Link
                   href="/admin/audit"
-                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+                  className="text-[13px] font-medium text-signal hover:underline"
                 >
                   {t("ad.auditLog")}
                 </Link>
@@ -181,8 +175,8 @@ export default function AdminDashboardPage() {
                     <Row
                       key={analysis._id}
                       primary={analysis.patientName ?? analysis.patientCode ?? t("common.unnamedPatient")}
-                      secondary={formatDateTime(analysis.createdAt)}
-                      trailing={<RiskBadge color={analysis.overallRisk} quiet />}
+                      secondary={formatListDate(analysis.createdAt)}
+                      marker={<RiskMarker color={analysis.overallRisk} />}
                     />
                   ))}
                 </div>

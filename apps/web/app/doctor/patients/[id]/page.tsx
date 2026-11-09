@@ -252,7 +252,6 @@ export default function PatientDetailPage() {
   return (
     <AppShell role="DOCTOR" navItems={DOCTOR_NAV} crumbOverride={patient?.user.fullName}>
       <PageHeader
-        eyebrow={t("chart.eyebrow")}
         title={patient?.user.fullName ?? t("chart.patientFallback")}
         meta={
           patient && (
@@ -291,7 +290,7 @@ export default function PatientDetailPage() {
               <button
                 type="button"
                 onClick={() => setDiagnosisOpen(true)}
-                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted transition hover:text-ink"
+                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 text-[13px] font-medium text-ink-muted transition hover:text-ink"
               >
                 {t("action.add")}
               </button>
@@ -329,7 +328,7 @@ export default function PatientDetailPage() {
               <button
                 type="button"
                 onClick={() => setMedicationOpen(true)}
-                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted transition hover:text-ink"
+                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 text-[13px] font-medium text-ink-muted transition hover:text-ink"
               >
                 {t("action.add")}
               </button>
@@ -350,7 +349,7 @@ export default function PatientDetailPage() {
                     <button
                       type="button"
                       onClick={() => setReferenceFor(medication.genericName)}
-                      className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-signal hover:underline"
+                      className="shrink-0 text-[12px] font-medium text-signal hover:underline"
                     >
                       {t("chart.reference")}
                     </button>
@@ -373,7 +372,7 @@ export default function PatientDetailPage() {
               <button
                 type="button"
                 onClick={() => setHistoryOpen(true)}
-                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted transition hover:text-ink"
+                className="rounded border border-[color:var(--line-strong)] px-2.5 py-1 text-[13px] font-medium text-ink-muted transition hover:text-ink"
               >
                 {t("action.add")}
               </button>
@@ -481,7 +480,7 @@ export default function PatientDetailPage() {
               <button
                 type="button"
                 onClick={() => setCustomRange((open) => !open)}
-                className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+                className="text-[13px] font-medium text-signal hover:underline"
               >
                 {customRange ? t("analysis.usePreset") : t("analysis.customDates")}
               </button>
@@ -742,7 +741,7 @@ export default function PatientDetailPage() {
             type="button"
             disabled={medicationForm.genericName.trim().length < 2}
             onClick={() => setReferenceFor(medicationForm.genericName.trim())}
-            className="self-start font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline disabled:text-ink-faint disabled:no-underline"
+            className="self-start text-[13px] font-medium text-signal hover:underline disabled:text-ink-faint disabled:no-underline"
           >
             {t("chart.lookUpFirst")}
           </button>

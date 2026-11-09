@@ -365,6 +365,12 @@ export const en: Record<MessageKey, string> = {
   "twin.missingPrefix": "Missing:",
 
   "console.nothingWaiting": "Nothing waiting",
+  "console.clearQueues": "Clear:",
+  "scenarioStatus.DRAFT": "Draft",
+  "scenarioStatus.UNDER_REVIEW": "Under review",
+  "scenarioStatus.APPROVED": "Approved",
+  "scenarioStatus.REJECTED": "Rejected",
+  "scenarioStatus.DISCONTINUED": "Discontinued",
   "console.noAnalysesInRange": "No analyses in range.",
   "console.nothingRecordedYet": "Nothing recorded yet.",
   "console.loading": "Loading",

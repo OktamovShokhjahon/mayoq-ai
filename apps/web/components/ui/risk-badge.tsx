@@ -49,3 +49,31 @@ export function RiskBadge({
     </span>
   );
 }
+
+/**
+ * Risk as a gutter marker, for lists.
+ *
+ * A full pill on every row of a list is both ragged and shouty: the widths
+ * differ with the wording, so there is no column to scan, and ten pills
+ * competing at full saturation mean the red one no longer stands out. The
+ * marker is one fixed-size dot carrying the same glyph and the same three
+ * colours, so a list of twenty reads as a column and the eye finds red at a
+ * glance. The wording stays in the accessible name, and the full badge is
+ * still what a single result gets on a detail page.
+ */
+export function RiskMarker({ color }: { color: "green" | "yellow" | "red" }) {
+  const { t } = useI18n();
+  const config = CONFIG[color];
+  const riskLabel = t(`risk.${color}` as MessageKey);
+
+  return (
+    <span
+      role="status"
+      aria-label={riskLabel}
+      title={riskLabel}
+      className={`inline-flex h-[18px] w-[18px] items-center justify-center rounded-full border text-[10px] font-bold leading-none ${config.classes}`}
+    >
+      <span aria-hidden>{config.glyph}</span>
+    </span>
+  );
+}

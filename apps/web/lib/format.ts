@@ -87,6 +87,24 @@ export function formatDateTime(value?: string | Date): string {
   return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString(activeTag);
 }
 
+/**
+ * Date and time for a list row. Seconds are precision nobody reads in a feed
+ * and they make every row a different width; the audit log, where the exact
+ * instant is the point, still uses formatDateTime.
+ */
+export function formatListDate(value?: string | Date): string {
+  if (!value) return "—";
+  const date = typeof value === "string" ? new Date(value) : value;
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleString(activeTag, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 /** "3 days ago" — used where the exact timestamp is noise. */
 export function formatRelative(value?: string | Date): string {
   if (!value) return "—";

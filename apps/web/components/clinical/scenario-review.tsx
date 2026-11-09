@@ -150,7 +150,7 @@ export function ScenarioReview({
           <button
             onClick={() => recalculate.mutate()}
             disabled={recalculate.isPending}
-            className="rounded border border-state-amber/50 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-state-amber transition hover:bg-state-amber/10 disabled:opacity-60"
+            className="rounded border border-state-amber/50 px-3 py-1.5 text-[13px] font-medium text-state-amber transition hover:bg-state-amber/10 disabled:opacity-60"
           >
             {recalculate.isPending ? t("sr.rerunning") : t("sr.rerun")}
           </button>
@@ -191,7 +191,7 @@ export function ScenarioReview({
               setNote(reviewed.note ?? "");
               setVisibleToPatient(reviewed.visibleToPatient);
             }}
-            className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+            className="mt-3 text-[13px] font-medium text-signal hover:underline"
           >
             {t("sr.revise")}
           </button>
@@ -206,7 +206,7 @@ export function ScenarioReview({
               type="button"
               onClick={() => generateSummary.mutate()}
               disabled={generateSummary.isPending}
-              className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
+              className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 text-[13px] font-medium text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
             >
               {generateSummary.isPending
                 ? t("sr.summaryDrafting")
@@ -231,7 +231,7 @@ export function ScenarioReview({
                   type="button"
                   onClick={() => approveSummary.mutate()}
                   disabled={approveSummary.isPending || summaryText.trim().length === 0}
-                  className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
+                  className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 text-[13px] font-medium text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
                 >
                   {t("sr.summaryApprove")}
                 </button>
@@ -328,7 +328,7 @@ export function ScenarioReview({
               <button
                 type="button"
                 onClick={() => setDecision(null)}
-                className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint hover:text-ink"
+                className="text-[13px] font-medium text-ink-faint hover:text-ink"
               >
                 {t("common.cancel")}
               </button>

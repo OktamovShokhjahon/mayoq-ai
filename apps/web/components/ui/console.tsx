@@ -19,7 +19,13 @@ export function PageHeader({
   meta,
   action,
 }: {
-  eyebrow: string;
+  /**
+   * Rarely needed. The rail already names the role and the breadcrumb already
+   * names the section, so an eyebrow reading "Doctor console" above a doctor
+   * page is the third statement of one fact and the first thing the eye hits.
+   * Pass it only where the page's context is not otherwise on screen.
+   */
+  eyebrow?: string;
   title: string;
   description?: string;
   meta?: ReactNode;
@@ -29,10 +35,14 @@ export function PageHeader({
     <header className="mb-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <span className="readout">{eyebrow}</span>
-          <h1 className="display mt-2 text-[28px] leading-tight text-ink sm:text-[32px]">{title}</h1>
+          {eyebrow && <span className="readout">{eyebrow}</span>}
+          <h1
+            className={`display text-[26px] leading-[1.12] text-ink sm:text-[31px] ${eyebrow ? "mt-2" : ""}`}
+          >
+            {title}
+          </h1>
           {description && (
-            <p className="mt-2 max-w-readable text-[14px] leading-relaxed text-ink-muted">
+            <p className="mt-2.5 max-w-readable text-[15px] leading-relaxed text-ink-muted">
               {description}
             </p>
           )}
@@ -49,11 +59,16 @@ export function PageHeader({
   );
 }
 
+/**
+ * Context in the header rail. Label and value sit on one line: stacked, three
+ * of them read as three small columns of equal importance to the page title,
+ * which is not what a page's supporting counts are.
+ */
 export function MetaItem({ label, value }: { label: string; value: string }) {
   return (
-    <span className="flex flex-col">
-      <span className="readout">{label}</span>
-      <span className="font-mono text-[12px] tabular-nums text-ink-muted">{value}</span>
+    <span className="flex items-baseline gap-2">
+      <span className="text-[13px] text-ink-faint">{label}</span>
+      <span className="readout-value text-[13px] text-ink-muted">{value}</span>
     </span>
   );
 }
@@ -68,68 +83,113 @@ type Tone = "neutral" | "amber" | "red";
  * that count earns, and the way in. An empty queue is calm on purpose: a zero
  * next to "New alerts" is good news, and colouring it red would cry wolf.
  */
-export function QueueCard({
-  label,
-  count,
-  hint,
-  href,
-  tone = "neutral",
-  /**
-   * A queue is work waiting; a stat is context. Only a queue can be "clear",
-   * so only a queue turns green at zero — "Nothing waiting" under a panel size
-   * would be nonsense.
-   */
-  kind = "queue",
-  index = 0,
-}: {
+export interface QueueDef {
   label: string;
   count: number;
   hint: string;
   href: string;
   tone?: Tone;
-  kind?: "queue" | "stat";
-  index?: number;
-}) {
+}
+
+/**
+ * The triage band: what is waiting, and nothing else.
+ *
+ * This used to be four equal tiles. Three of them routinely read zero, and an
+ * empty queue took exactly as much space and contrast as the one queue with
+ * work in it — so the page promised triage in its headline and delivered a
+ * grid the clinician had to read in full to find the single number that
+ * mattered. On a phone you scrolled two screens of "nothing waiting" first.
+ *
+ * So: a queue with work in it gets a lit card. Queues at zero are good news,
+ * and good news is one quiet line naming them, not three cards. If everything
+ * is clear the band is a single line and the page starts at the work below.
+ */
+export function TriageBand({ queues }: { queues: QueueDef[] }) {
   const { t } = useI18n();
-  const isQueue = kind === "queue";
-  const active = count > 0;
-  const clear = isQueue && !active;
-  const accent = clear
-    ? "var(--state-green)"
-    : !isQueue
-      ? "var(--signal)"
-      : tone === "red"
-        ? "var(--state-red)"
-        : tone === "amber"
-          ? "var(--state-amber)"
-          : "var(--signal)";
+  const active = queues.filter((queue) => queue.count > 0);
+  const clear = queues.filter((queue) => queue.count === 0);
+
+  return (
+    <div className="flex flex-col gap-3">
+      {active.length > 0 && (
+        <div
+          className={`grid gap-3 ${
+            active.length === 1 ? "" : active.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"
+          }`}
+        >
+          {active.map((queue) => (
+            <LiveQueue key={queue.label} {...queue} wide={active.length === 1} />
+          ))}
+        </div>
+      )}
+
+      {clear.length > 0 && (
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-faint">
+          <span
+            aria-hidden
+            className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-state-green/15 text-[9px] font-bold text-state-green"
+          >
+            ✓
+          </span>
+          <span>
+            {t("console.clearQueues")}{" "}
+            <span className="text-ink-muted">
+              {clear.map((queue) => queue.label.toLocaleLowerCase()).join(", ")}
+            </span>
+          </span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** One queue that has work in it. The only lit thing in the band. */
+function LiveQueue({
+  label,
+  count,
+  hint,
+  href,
+  tone = "neutral",
+  wide,
+}: QueueDef & { wide?: boolean }) {
+  const accent =
+    tone === "red" ? "var(--state-red)" : tone === "amber" ? "var(--state-amber)" : "var(--signal)";
 
   return (
     <Link
       href={href}
-      className="panel group relative block overflow-hidden p-5 transition hover:-translate-y-0.5 hover:shadow-lg"
-      style={{ animationDelay: `${index * 60}ms` }}
+      className="panel-live group flex items-center gap-4 overflow-hidden p-5 transition hover:-translate-y-0.5"
     >
-      <span aria-hidden className="absolute left-0 top-0 h-full w-[3px]" style={{ background: accent }} />
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="readout">{label}</span>
-        <span
-          aria-hidden
-          className="font-mono text-[11px] text-ink-faint transition group-hover:translate-x-0.5 group-hover:text-signal"
-        >
-          →
-        </span>
-      </div>
-      <div
-        className="mt-3 font-display text-[34px] leading-none tabular-nums"
-        style={{ color: isQueue && active ? accent : "var(--ink)" }}
+      <span
+        className="font-display text-[39px] leading-none tabular-nums"
+        style={{ color: accent }}
       >
         {count}
-      </div>
-      <p className="mt-2 text-[12px] leading-snug text-ink-faint">
-        {clear ? t("console.nothingWaiting") : hint}
-      </p>
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[15px] font-semibold leading-tight text-ink">{label}</span>
+        <span className={`mt-1 block text-[13px] leading-snug text-ink-faint ${wide ? "" : "line-clamp-2"}`}>
+          {hint}
+        </span>
+      </span>
     </Link>
+  );
+}
+
+/**
+ * Supporting counts. Not a queue and not a card: nothing here is waiting on
+ * anyone, so it reads as a line of context under the band.
+ */
+export function ContextStats({ items }: { items: Array<{ label: string; value: string }> }) {
+  return (
+    <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+      {items.map((item) => (
+        <span key={item.label} className="flex items-baseline gap-2">
+          <dt className="text-[13px] text-ink-faint">{item.label}</dt>
+          <dd className="readout-value text-[13px] text-ink-muted">{item.value}</dd>
+        </span>
+      ))}
+    </dl>
   );
 }
 
@@ -233,16 +293,27 @@ export function Panel({
   action,
   children,
   className = "",
+  /**
+   * How much light this surface earns. "quiet" is for context the reader
+   * passes over — a legend, a standing note — which previously looked
+   * identical to the panel holding the actual work.
+   */
+  tier = "default",
 }: {
   title: string;
   action?: ReactNode;
   children: ReactNode;
   className?: string;
+  tier?: "default" | "quiet";
 }) {
+  const quiet = tier === "quiet";
   return (
-    <section className={`panel flex flex-col ${className}`}>
-      <div className="flex items-center justify-between gap-3 border-b border-[color:var(--line)] px-5 py-3.5">
-        <h2 className="readout">{title}</h2>
+    <section className={`${quiet ? "panel-quiet" : "panel"} flex flex-col ${className}`}>
+      <div
+        className="flex items-center justify-between gap-3 border-b px-5 py-3"
+        style={{ borderColor: quiet ? "var(--line-quiet)" : "var(--line)" }}
+      >
+        <h2 className="label">{title}</h2>
         {action}
       </div>
       <div className="min-h-0 flex-1 p-5">{children}</div>
@@ -284,19 +355,30 @@ export function Row({
   primary,
   secondary,
   trailing,
+  marker,
   href,
 }: {
   primary: ReactNode;
   secondary?: ReactNode;
   trailing?: ReactNode;
+  /**
+   * A fixed-width slot at the left edge. Risk is the most scannable thing in
+   * a clinical list, but as a variable-width pill on the right it left the
+   * rows ragged and gave the eye no column to run down. In the gutter it
+   * lines up, and the row's text starts at one consistent indent.
+   */
+  marker?: ReactNode;
   href?: string;
 }) {
   const body = (
-    <div className="flex items-center justify-between gap-4 rounded px-3 py-2.5 transition hover:bg-ink/[0.03]">
-      <div className="min-w-0">
+    <div className="flex items-center gap-3 rounded px-3 py-2.5 transition hover:bg-ink/[0.03]">
+      {marker !== undefined && (
+        <span className="flex w-5 shrink-0 justify-center">{marker}</span>
+      )}
+      <div className="min-w-0 flex-1">
         <div className="truncate text-[14px] text-ink">{primary}</div>
         {secondary && (
-          <div className="mt-0.5 font-mono text-[11px] tabular-nums text-ink-faint">{secondary}</div>
+          <div className="mt-0.5 text-[12px] text-ink-faint">{secondary}</div>
         )}
       </div>
       {trailing}
@@ -370,13 +452,19 @@ export function Tabs({
             aria-selected={selected}
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.id)}
-            className="group relative shrink-0 px-3.5 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition"
-            style={{ color: selected ? "var(--ink)" : "var(--ink-faint)" }}
+            // Sans, sentence case: a tab label is a place name, not a reading.
+            className="group relative shrink-0 px-3.5 py-2.5 text-[14px] transition"
+            style={{
+              color: selected ? "var(--ink)" : "var(--ink-faint)",
+              fontWeight: selected ? 600 : 400,
+            }}
           >
             <span className="flex items-center gap-1.5">
               {tab.label}
               {tab.count !== undefined && tab.count > 0 && (
-                <span className="readout-value text-[10px] text-ink-faint">{tab.count}</span>
+                <span className="readout-value rounded-full bg-ink/[0.07] px-1.5 py-0.5 text-[10px] text-ink-muted">
+                  {tab.count}
+                </span>
               )}
             </span>
             {/* The lamp marks where you are. */}

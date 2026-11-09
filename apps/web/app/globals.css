@@ -58,6 +58,32 @@
   --glass-bg: rgba(255, 255, 255, 0.62);
   --glass-line: rgba(255, 255, 255, 0.5);
   --shadow-panel: 0 1px 0 rgba(14, 26, 33, 0.04), 0 10px 26px -18px rgba(14, 26, 33, 0.3);
+
+  /* Elevation tiers. One panel style for everything made a reference footnote
+     and a decision queue look like peers. Three tiers, and the difference
+     between them is how much light they catch:
+       quiet — context you read past. Flat, no shadow, recedes into the ground.
+       panel — the working surface. The default.
+       live  — something is waiting on a person. Lit along its top edge. */
+  --surface-quiet: rgba(14, 26, 33, 0.028);
+  --line-quiet: rgba(14, 26, 33, 0.08);
+  --shadow-live: 0 1px 0 rgba(14, 26, 33, 0.05), 0 18px 40px -26px rgba(228, 96, 28, 0.45);
+
+  /* Ground wash. In light the beam was being washed out by its own highlight,
+     so the identity only survived in focus rings. These drive the body
+     gradient and are the one place the lamp touches a light-mode surface. */
+  --wash-beam: rgba(228, 96, 28, 0.13);
+  --wash-sky: rgba(255, 255, 255, 0.5);
+
+  /* Type scale, major-third-ish, anchored on a 15px reading size. Named by
+     job rather than by size so a page never has to pick a pixel value. */
+  --t-readout: 11px;
+  --t-small: 13px;
+  --t-body: 15px;
+  --t-title: 19px;
+  --t-section: 24px;
+  --t-page: 31px;
+  --t-display: 39px;
 }
 
 /* Dark console. Applied when the viewer asked for dark, or when the system
@@ -131,6 +157,15 @@
   --glass-bg: rgba(17, 28, 35, 0.62);
   --glass-line: rgba(220, 234, 242, 0.1);
   --shadow-panel: 0 1px 0 rgba(0, 0, 0, 0.4), 0 10px 26px -18px rgba(0, 0, 0, 0.8);
+
+  --surface-quiet: rgba(220, 234, 242, 0.028);
+  --line-quiet: rgba(220, 234, 242, 0.07);
+  --shadow-live: 0 1px 0 rgba(0, 0, 0, 0.4), 0 18px 40px -26px rgba(255, 138, 69, 0.5);
+
+  /* At night the beam reads against the dark without a sky highlight fighting
+     it, so the wash is the beam alone. */
+  --wash-beam: rgba(255, 138, 69, 0.16);
+  --wash-sky: rgba(90, 150, 175, 0.07);
 }
 
 /* Derived once. These follow whichever theme is active, so no theme block
@@ -166,10 +201,15 @@ body {
   background-color: var(--paper);
   /* A beam raking in from the top-right corner, and the light it throws on the
      surface below it. Kept far below the threshold where it could be read as a
-     state colour on a clinical surface. */
+     state colour on a clinical surface.
+
+     The sky highlight used to sit on top of the beam at 55% white, which in
+     light mode erased it — the identity survived only in focus rings. The two
+     are now separated: the beam rakes from the corner, the sky lifts the far
+     edge, and neither cancels the other. */
   background-image:
-    radial-gradient(ellipse 70% 50% at 100% 0%, var(--lamp-deep), transparent 62%),
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.55), transparent 60%);
+    radial-gradient(ellipse 62% 46% at 104% -4%, var(--wash-beam), transparent 64%),
+    radial-gradient(ellipse 100% 42% at 20% -12%, var(--wash-sky), transparent 62%);
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-body), ui-sans-serif, sans-serif;
@@ -223,16 +263,55 @@ body {
     box-shadow: var(--shadow-panel);
   }
 
+  /* Context you read past: a reference note, a legend, a help panel. It sits
+     in the ground rather than on it, so it stops competing with the work. */
+  .panel-quiet {
+    @apply rounded-md border;
+    background: var(--surface-quiet);
+    border-color: var(--line-quiet);
+    box-shadow: none;
+  }
+
+  /* Something is waiting on a person. The lamp lights the top edge — the one
+     place the identity colour touches a working surface, and it means
+     "attention", never a clinical grade. The grade is still the badge's job. */
+  .panel-live {
+    @apply relative rounded-md border bg-surface;
+    border-color: var(--line);
+    box-shadow: var(--shadow-live);
+  }
+  .panel-live::before {
+    content: "";
+    position: absolute;
+    /* Inside the border, not over it: the card clips its overflow, so a
+       negative inset put the beam outside the paint area and nothing showed. */
+    inset: 0 0 auto;
+    height: 2px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(to right, var(--lamp), rgb(var(--rgb-lamp) / 0.15) 70%, transparent);
+  }
+
   .panel-sunken {
     @apply rounded-lg border;
     background: var(--sunken);
     border-color: var(--line);
   }
 
-  /* Monospace utility type: labels, units, versions, identifiers. */
+  /* Monospace utility type: reserved for a MEASURED thing — a unit, a count,
+     an identifier, a ruleset version. It was carrying section titles, tab
+     labels and panel headers too, on 128 elements, which left mono meaning
+     nothing in particular. Titles now use `.label`. */
   .readout {
     font-family: var(--font-mono), ui-monospace, monospace;
     @apply text-[11px] uppercase tracking-[0.14em] text-ink-faint;
+  }
+
+  /* Section and panel titles. Sans, sentence case, no tracking: a title is
+     language, not instrumentation, and it should not look like a reading. */
+  .label {
+    font-family: var(--font-body), ui-sans-serif, sans-serif;
+    @apply text-[13px] font-semibold leading-none text-ink-muted;
+    letter-spacing: 0;
   }
 
   .readout-value {
@@ -288,12 +367,17 @@ body {
   animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Scroll-reveal: set by IntersectionObserver in `useReveal`. */
+/* Scroll-reveal: set by IntersectionObserver in `useReveal`.
+
+   An 18px slide on every section is the house style of every generated page,
+   and it makes a long page feel like it is assembling itself under the reader.
+   Reduced to a short lift that settles quickly: enough to show a section has
+   arrived, not enough to be the thing you notice. */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(6px);
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .reveal[data-shown="true"] {
   opacity: 1;

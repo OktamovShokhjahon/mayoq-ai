@@ -1,0 +1,75 @@
+# Render Blueprint for the TwinRx / MAYOQ AI API.
+#
+# The web app is NOT deployed here — it goes to Vercel (see apps/web/vercel.json
+# and DEPLOY.md). Only the Express API and its MongoDB connection live on Render.
+#
+# Every secret below is marked `sync: false`, which means Render prompts for it
+# on first deploy and stores it encrypted. Nothing secret belongs in this file:
+# it is committed, so anything written here is public to anyone with repo access.
+services:
+  - type: web
+    name: mayoq-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    # Workspace-aware install: the API is one package in an npm workspaces repo,
+    # so the root manifest has to be installed alongside it for the lockfile to
+    # resolve. Installing only apps/api would miss the hoisted dependencies.
+    buildCommand: npm install --workspace=@twinrx/api --include-workspace-root && npm run build --workspace=@twinrx/api
+    startCommand: node apps/api/dist/server.js
+    # The API answers /health with {status:"ok"} without touching Mongo, so a
+    # database blip does not get the whole service restarted.
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      # Render injects PORT and the server reads it; do not pin it here.
+
+      # --- set at deploy time -------------------------------------------------
+      # Atlas connection string. Must end in a database name (…mongodb.net/twinrx),
+      # otherwise Mongo connects to the default "test" database and the app looks
+      # empty even though the connection succeeded.
+      - key: MONGODB_URI
+        sync: false
+      # Comma-separated list of allowed browser origins. In production the API
+      # rejects anything not listed here, so this must hold the exact Vercel
+      # domain, scheme included and no trailing slash. Add preview domains here
+      # too if you want preview deploys to reach the API.
+      - key: WEB_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+
+      # --- tuned defaults -----------------------------------------------------
+      - key: JWT_ACCESS_TTL
+        value: 15m
+      - key: JWT_REFRESH_TTL
+        value: 7d
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: GEMINI_FALLBACK_MODELS
+        value: gemini-3.1-flash-lite,gemini-3.5-flash
+      # Free-tier Gemini quota is per day and shared across the whole service,
+      # so the global ceiling stays low rather than letting one busy tenant
+      # exhaust the key for everyone.
+      - key: AI_TENANT_PER_MINUTE
+        value: "8"
+      - key: AI_GLOBAL_PER_MINUTE
+        value: "12"
+      # Off in production: a fabricated explanation must never stand in for a
+      # real one on a clinical surface. If Gemini is down the UI says so.
+      - key: DEMO_AI_FALLBACK
+        value: "false"
+      - key: BILLING_PROVIDER
+        value: mock
+      - key: BILLING_WEBHOOK_SECRET
+        generateValue: true
+      - key: DEMO_TRIAL_DAYS
+        value: "7"

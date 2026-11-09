@@ -73,13 +73,19 @@ export function isAiConfigured(): boolean {
 }
 
 async function postWithRetry(url: string, body: string, deadline = Infinity): Promise<Response> {
+  // Callers reach this only past an isAiConfigured()/geminiApiKey guard, but
+  // the key is optional in env and the narrowing does not cross the call
+  // boundary — so assert it here rather than send the header as undefined.
+  const apiKey = env.geminiApiKey;
+  if (!apiKey) throw new Error("AI_UNAVAILABLE: GEMINI_API_KEY not configured");
+
   let response: Response | undefined;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const left = Math.min(REQUEST_TIMEOUT_MS, deadline - Date.now());
     if (left <= 0) throw new Error("AI_TIMEOUT: out of time before the request could be sent");
     response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": env.geminiApiKey },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       body,
       signal: AbortSignal.timeout(left),
     });

@@ -135,7 +135,7 @@ export function DocumentIntake({ patientId }: { patientId: string }) {
           type="button"
           onClick={() => fileInput.current?.click()}
           disabled={upload.isPending}
-          className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
+          className="rounded border border-[color:var(--line-strong)] px-3 py-1.5 text-[13px] font-medium text-ink transition hover:bg-ink/[0.04] disabled:opacity-60"
         >
           {upload.isPending ? t("di.uploading") : t("di.uploadFile")}
         </button>
@@ -264,14 +264,14 @@ export function DocumentIntake({ patientId }: { patientId: string }) {
                     <button
                       onClick={() => verify.mutate({ recordId: record._id, approve: true })}
                       disabled={verify.isPending}
-                      className="rounded border border-state-green/50 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-state-green transition hover:bg-state-green/10 disabled:opacity-60"
+                      className="rounded border border-state-green/50 px-3 py-1 text-[12px] font-medium text-state-green transition hover:bg-state-green/10 disabled:opacity-60"
                     >
                       {t("action.approve")}
                     </button>
                     <button
                       onClick={() => verify.mutate({ recordId: record._id, approve: false })}
                       disabled={verify.isPending}
-                      className="rounded border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted transition hover:bg-ink/[0.04] disabled:opacity-60"
+                      className="rounded border border-[color:var(--line-strong)] px-3 py-1 text-[12px] font-medium text-ink-muted transition hover:bg-ink/[0.04] disabled:opacity-60"
                     >
                       {t("action.reject")}
                     </button>
@@ -309,7 +309,7 @@ export function DocumentIntake({ patientId }: { patientId: string }) {
                   <button
                     onClick={() => exportPdf.mutate(document._id)}
                     disabled={exportPdf.isPending}
-                    className="font-mono text-[10px] uppercase tracking-[0.1em] text-signal hover:underline disabled:text-ink-faint"
+                    className="text-[12px] font-medium text-signal hover:underline disabled:text-ink-faint"
                   >
                     {t("di.exportPdf")}
                   </button>
@@ -320,7 +320,7 @@ export function DocumentIntake({ patientId }: { patientId: string }) {
                     analyze.mutate({ documentId: document._id });
                   }}
                   disabled={analyze.isPending}
-                  className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-signal hover:underline disabled:text-ink-faint"
+                  className="shrink-0 text-[12px] font-medium text-signal hover:underline disabled:text-ink-faint"
                 >
                   {document.analyzedAt ? t("di.reExtract") : t("di.extractFacts")}
                 </button>

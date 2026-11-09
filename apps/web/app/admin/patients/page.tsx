@@ -51,7 +51,6 @@ export default function AdminPatientsPage() {
   return (
     <AppShell role="ADMIN" navItems={ADMIN_NAV}>
       <PageHeader
-        eyebrow={t("ad.eyebrow")}
         title={t("ap.title")}
         description={t("ap.description")}
         meta={
@@ -78,7 +77,7 @@ export default function AdminPatientsPage() {
               key={option}
               onClick={() => setStatus(option)}
               aria-pressed={status === option}
-              className={`rounded border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] transition ${
+              className={`rounded border px-3 py-1.5 text-[13px] font-medium transition ${
                 status === option
                   ? "border-[color:var(--signal)] text-signal"
                   : "border-[color:var(--line)] text-ink-faint hover:text-ink"

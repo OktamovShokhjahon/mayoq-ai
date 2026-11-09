@@ -101,9 +101,14 @@ export function AppShell({
   }
 
   const segments = pathname.split("/").filter(Boolean);
-  const crumbs = segments.map((segment, index) =>
-    index === segments.length - 1 && crumbOverride ? crumbOverride : segment.replace(/-/g, " "),
-  );
+  // Route segments are lowercase slugs. They used to be set in tracked-out
+  // caps, which hid that; in sentence case the raw slug shows, so capitalise
+  // it here rather than leaning on text-transform to tidy the data.
+  const crumbs = segments.map((segment, index) => {
+    if (index === segments.length - 1 && crumbOverride) return crumbOverride;
+    const words = segment.replace(/-/g, " ");
+    return words.charAt(0).toLocaleUpperCase() + words.slice(1);
+  });
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-0.5" aria-label={t("nav.primary")}>
@@ -153,7 +158,7 @@ export function AppShell({
             clearSession();
             router.push("/login");
           }}
-          className="rounded-md px-3 py-2 text-left font-mono text-[11px] uppercase tracking-[0.12em] text-white/45 transition hover:bg-white/[0.06] hover:text-white/80"
+          className="rounded-md px-3 py-2 text-left text-[13px] font-medium text-white/45 transition hover:bg-white/[0.06] hover:text-white/80"
         >
           {t("action.signOut")}
         </button>
@@ -170,7 +175,7 @@ export function AppShell({
             >
               {t("nav.menu")}
             </button>
-            <ol className="flex min-w-0 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
+            <ol className="flex min-w-0 items-center gap-2 text-[13px] font-medium text-ink-faint">
               {crumbs.map((crumb, index) => (
                 <li key={`${crumb}-${index}`} className="flex min-w-0 items-center gap-2">
                   {index > 0 && <span aria-hidden>/</span>}
@@ -184,7 +189,7 @@ export function AppShell({
           <div className="flex shrink-0 items-center gap-2.5">
             <LanguageSwitcher />
             <ThemeToggle />
-            <span className="hidden font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint sm:inline">
+            <span className="hidden text-[13px] font-medium text-ink-faint sm:inline">
               {t(ROLE_KEY[role])}
             </span>
             <span className="hidden text-sm text-ink md:inline">{user.fullName}</span>

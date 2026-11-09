@@ -77,7 +77,6 @@ export default function AdminDoctorsPage() {
   return (
     <AppShell role="ADMIN" navItems={ADMIN_NAV}>
       <PageHeader
-        eyebrow={t("ad.eyebrow")}
         title={t("adr.title")}
         description={t("adr.description")}
         action={
@@ -110,7 +109,7 @@ export default function AdminDoctorsPage() {
                 navigator.clipboard?.writeText(tempPasswordFor.password);
                 toast(t("adr.copied"));
               }}
-              className="font-mono text-[11px] uppercase tracking-[0.1em] text-signal hover:underline"
+              className="text-[13px] font-medium text-signal hover:underline"
             >
               {t("adr.copy")}
             </button>

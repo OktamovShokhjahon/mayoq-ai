@@ -59,7 +59,7 @@ export function DiagnosisDetail({
       <button
         type="button"
         onClick={onGenerate}
-        className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+        className="mt-2 text-[13px] font-medium text-signal hover:underline"
       >
         {t("dx.add")}
       </button>
@@ -75,7 +75,7 @@ export function DiagnosisDetail({
         <button
           type="button"
           onClick={onGenerate}
-          className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+          className="text-[13px] font-medium text-signal hover:underline"
         >
           {t("dx.rewrite")}
         </button>
@@ -133,7 +133,7 @@ export function DiagnosisDetail({
             type="button"
             onClick={() => review.mutate(true)}
             disabled={review.isPending}
-            className="rounded border border-state-green/40 bg-state-green/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-state-green transition hover:bg-state-green/20 disabled:opacity-60"
+            className="rounded border border-state-green/40 bg-state-green/10 px-3 py-1 text-[12px] font-medium text-state-green transition hover:bg-state-green/20 disabled:opacity-60"
           >
             {t("action.approve")}
           </button>
@@ -141,7 +141,7 @@ export function DiagnosisDetail({
             type="button"
             onClick={() => review.mutate(false)}
             disabled={review.isPending}
-            className="rounded border border-[color:var(--line-strong)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted transition hover:bg-ink/[0.04] disabled:opacity-60"
+            className="rounded border border-[color:var(--line-strong)] px-3 py-1 text-[12px] font-medium text-ink-muted transition hover:bg-ink/[0.04] disabled:opacity-60"
           >
             {t("action.reject")}
           </button>

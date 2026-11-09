@@ -51,7 +51,7 @@ export function SampleCases() {
               aria-selected={selected}
               aria-controls="case-panel"
               onClick={() => setActiveId(item.id)}
-              className={`whitespace-nowrap border-b-2 px-5 py-3.5 font-mono text-[11px] uppercase tracking-[0.12em] transition ${
+              className={`whitespace-nowrap border-b-2 px-5 py-3.5 text-[13px] font-medium transition ${
                 selected
                   ? "border-signal text-ink"
                   : "border-transparent text-ink-faint hover:text-ink"

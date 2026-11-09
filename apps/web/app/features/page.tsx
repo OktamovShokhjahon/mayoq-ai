@@ -82,7 +82,7 @@ export default function FeaturesPage() {
               <tbody>
                 {page.compareRows.map((row) => (
                   <tr key={row.label} className="border-b border-[color:var(--line)] align-top">
-                    <th scope="row" className="py-4 pr-4 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
+                    <th scope="row" className="py-4 pr-4 text-[13px] font-medium text-ink-faint">
                       {row.label}
                     </th>
                     <td className="py-4 pr-4 text-[14px] text-ink-muted">{row.usual}</td>

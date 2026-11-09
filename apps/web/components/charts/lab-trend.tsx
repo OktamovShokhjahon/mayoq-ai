@@ -63,7 +63,7 @@ export function LabTrend({ records }: { records: LabRecord[] }) {
               key={entry.field}
               onClick={() => setActive(index)}
               aria-pressed={index === active}
-              className={`rounded border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] transition ${
+              className={`rounded border px-3 py-1.5 text-[13px] font-medium transition ${
                 index === active
                   ? "border-[color:var(--signal)] text-signal"
                   : "border-[color:var(--line)] text-ink-faint hover:text-ink"

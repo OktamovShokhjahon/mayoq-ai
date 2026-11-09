@@ -4,21 +4,22 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, DOCTOR_NAV } from "@/components/ui/app-shell";
-import { RiskBadge } from "@/components/ui/risk-badge";
+import { RiskMarker } from "@/components/ui/risk-badge";
 import {
   EmptyState,
   MetaItem,
   PageHeader,
   Panel,
-  QueueCard,
   RiskRibbon,
   Row,
   Skeleton,
+  TriageBand,
 } from "@/components/ui/console";
 import { api } from "@/lib/api-client";
 import type { RiskColor } from "@/components/digital-twin/types";
 import { useI18n } from "@/lib/i18n";
-import { formatDateTime, humanizeEnum } from "@/lib/format";
+import type { MessageKey } from "@/lib/locales/uz";
+import { formatListDate } from "@/lib/format";
 
 interface DoctorDashboard {
   assignedPatients: number;
@@ -62,7 +63,6 @@ export default function DoctorDashboardPage() {
   return (
     <AppShell role="DOCTOR" navItems={DOCTOR_NAV}>
       <PageHeader
-        eyebrow={t("dd.eyebrow")}
         title={t("dd.title")}
         description={t("dd.description")}
         action={
@@ -97,50 +97,41 @@ export default function DoctorDashboardPage() {
       )}
 
       {isLoading && (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="panel h-[136px] animate-pulse" />
+        <div className="grid gap-3 sm:grid-cols-2">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div key={index} className="panel h-[104px] animate-pulse" />
           ))}
         </div>
       )}
 
       {data && (
         <>
-          {/* Triage strip: the reason to open this page at all. */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <QueueCard
-              label={t("dd.needsReview")}
-              count={data.needsReview}
-              hint={t("dd.needsReviewHint")}
-              href="/doctor/patients"
-              tone="amber"
-              index={0}
-            />
-            <QueueCard
-              label={t("dd.newAlerts")}
-              count={data.newAlerts}
-              hint={t("dd.newAlertsHint")}
-              href="/doctor/alerts"
-              tone="red"
-              index={1}
-            />
-            <QueueCard
-              label={t("dd.missingData")}
-              count={data.missingDataTasks}
-              hint={t("dd.missingDataHint")}
-              href="/doctor/patients"
-              tone="amber"
-              index={2}
-            />
-            <QueueCard
-              label={t("dd.assignedPatients")}
-              count={data.assignedPatients}
-              hint={t("dd.onYourPanel")}
-              href="/doctor/patients"
-              kind="stat"
-              index={3}
-            />
-          </div>
+          {/* Triage band: only the queues with work in them are lit. */}
+          <TriageBand
+            queues={[
+              {
+                label: t("dd.newAlerts"),
+                count: data.newAlerts,
+                hint: t("dd.newAlertsHint"),
+                href: "/doctor/alerts",
+                tone: "red",
+              },
+              {
+                label: t("dd.needsReview"),
+                count: data.needsReview,
+                hint: t("dd.needsReviewHint"),
+                href: "/doctor/patients",
+                tone: "amber",
+              },
+              {
+                label: t("dd.missingData"),
+                count: data.missingDataTasks,
+                hint: t("dd.missingDataHint"),
+                href: "/doctor/patients",
+                tone: "amber",
+              },
+            ]}
+          />
 
           <div className="mt-6 grid items-start gap-4 lg:grid-cols-[1.6fr_1fr]">
             <Panel
@@ -148,7 +139,7 @@ export default function DoctorDashboardPage() {
               action={
                 <Link
                   href="/doctor/alerts"
-                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+                  className="text-[13px] font-medium text-signal hover:underline"
                 >
                   {t("dd.allAlerts")}
                 </Link>
@@ -161,7 +152,7 @@ export default function DoctorDashboardPage() {
                   action={
                     <Link
                       href="/doctor/patients"
-                      className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+                      className="mt-1 text-[13px] font-medium text-signal hover:underline"
                     >
                       {t("dd.goToPatients")}
                     </Link>
@@ -178,10 +169,8 @@ export default function DoctorDashboardPage() {
                         analysis.patientCode ??
                         t("common.unnamedPatient")
                       }
-                      secondary={`${formatDateTime(analysis.createdAt)}${
-                        analysis.status ? ` · ${humanizeEnum(analysis.status)}` : ""
-                      }`}
-                      trailing={<RiskBadge color={analysis.overallRisk} quiet />}
+                      marker={<RiskMarker color={analysis.overallRisk} />}
+                      secondary={`${formatListDate(analysis.createdAt)}${analysis.status ? ` · ${t(`scenarioStatus.${analysis.status}` as MessageKey)}` : ""}`}
                     />
                   ))}
                 </div>
@@ -193,7 +182,7 @@ export default function DoctorDashboardPage() {
                 <RiskRibbon counts={counts} />
               </Panel>
 
-              <Panel title={t("dd.beforeYouDecide")}>
+              <Panel title={t("dd.beforeYouDecide")} tier="quiet">
                 <ul className="flex flex-col gap-3">
                   {(["dd.note1", "dd.note2", "dd.note3"] as const).map((line) => (
                     <li key={line} className="flex gap-2.5 text-[13px] leading-relaxed text-ink-muted">

@@ -392,6 +392,12 @@ export const uz = {
 
   // Console primitives
   "console.nothingWaiting": "Kutayotgan hech narsa yo'q",
+  "console.clearQueues": "Bo'sh:",
+  "scenarioStatus.DRAFT": "Qoralama",
+  "scenarioStatus.UNDER_REVIEW": "Koʻrib chiqilmoqda",
+  "scenarioStatus.APPROVED": "Tasdiqlangan",
+  "scenarioStatus.REJECTED": "Rad etilgan",
+  "scenarioStatus.DISCONTINUED": "Toʻxtatilgan",
   "console.noAnalysesInRange": "Tanlangan oraliqda tahlillar yo'q.",
   "console.nothingRecordedYet": "Hali hech narsa qayd etilmagan.",
   "console.loading": "Yuklanmoqda",

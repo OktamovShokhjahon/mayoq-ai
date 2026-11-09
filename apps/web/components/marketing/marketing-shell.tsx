@@ -23,7 +23,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const linkClass = (href: string) =>
-    `whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] transition ${
+    `whitespace-nowrap text-[13px] font-medium transition ${
       pathname === href ? "text-signal" : "text-ink-muted hover:text-ink"
     }`;
 
@@ -57,7 +57,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
             </Link>
             <Link
               href="/register"
-              className="whitespace-nowrap rounded border border-signal/40 bg-signal/[0.08] px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-signal transition hover:bg-signal/15"
+              className="whitespace-nowrap rounded border border-signal/40 bg-signal/[0.08] px-3.5 py-1.5 text-[13px] font-medium text-signal transition hover:bg-signal/15"
             >
               {t("home.startDemo")}
             </Link>

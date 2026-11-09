@@ -97,7 +97,7 @@ export default function PatientDashboardPage() {
             >
               {t("pd.openTwin")}
             </Link>
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
+            <span className="text-[13px] font-medium text-ink-faint">
               {t("pd.horizonNote", { days: latest.horizonDays })}
             </span>
           </div>
@@ -110,7 +110,7 @@ export default function PatientDashboardPage() {
           action={
             <Link
               href="/patient/diagnoses"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+              className="text-[13px] font-medium text-signal hover:underline"
             >
               {t("pd.all")}
             </Link>
@@ -137,7 +137,7 @@ export default function PatientDashboardPage() {
           action={
             <Link
               href="/patient/medications"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-signal hover:underline"
+              className="text-[13px] font-medium text-signal hover:underline"
             >
               {t("pd.all")}
             </Link>

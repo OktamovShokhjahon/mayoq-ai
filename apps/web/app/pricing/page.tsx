@@ -50,7 +50,7 @@ export default function PricingPage() {
       <PageHead eyebrow={page.eyebrow} title={page.title} body={page.body} />
 
       <section className="mx-auto max-w-6xl px-6 pb-16">
-        <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.12em] text-signal">
+        <p className="mb-6 text-[13px] font-medium text-signal">
           {t("home.planTrial")}
         </p>
 

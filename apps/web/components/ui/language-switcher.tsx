@@ -30,7 +30,7 @@ export function LanguageSwitcher({ onNavy = false }: { onNavy?: boolean }) {
             aria-pressed={active}
             aria-label={t(`lang.${code}` as "lang.uz")}
             title={t(`lang.${code}` as "lang.uz")}
-            className="rounded-sm px-1.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] transition"
+            className="rounded-sm px-1.5 py-1 text-[12px] font-medium transition"
             style={{
               color: active
                 ? onNavy

@@ -44,7 +44,6 @@ export default function DoctorAlertsPage() {
   return (
     <AppShell role="DOCTOR" navItems={DOCTOR_NAV}>
       <PageHeader
-        eyebrow={t("da.eyebrow")}
         title={t("da.title")}
         description={t("da.description")}
         meta={
