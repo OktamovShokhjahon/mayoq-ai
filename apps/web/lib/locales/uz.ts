@@ -82,8 +82,8 @@ export const uz = {
   "login.registerPrompt": "Klinikani ro'yxatdan o'tkazmoqchimisiz?",
   "login.registerLink": "7 kunlik demoni boshlang",
   "login.demoClinic": "Demo klinika · sintetik ma'lumotlar",
-  "login.demoNote":
-    "Bu klinikadagi har bir bemor uydirma. API lokal bo'lgani uchun ko'rsatilmoqda.",
+  "login.demoFill": "Bosib kiring",
+  "login.demoNote": "Bu klinikadagi har bir bemor uydirma. Bu loginlar ommaviy va demo uchun: bu yerga haqiqiy bemor ma'lumotlarini kiritmang.",
 
   // Patient chart
   "chart.tabChart": "Karta",

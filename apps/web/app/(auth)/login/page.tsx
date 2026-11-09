@@ -24,9 +24,15 @@ const ROLE_HOME: Record<string, string> = {
 };
 
 /**
- * The seeded demo clinic. Shown only when the app is pointed at a local API —
- * these credentials belong to synthetic patients created by `npm run seed`, and
- * a deployed instance must never offer to fill anything in.
+ * The seeded demo clinic, printed in full so a reviewer can sign in as any
+ * role without being handed credentials separately.
+ *
+ * These are published on purpose. They are shared, well-known logins into a
+ * clinic of synthetic patients created by the seed job, which is the whole
+ * point of a demo deployment — but it does mean anyone who loads this page can
+ * sign in, so nothing real may ever be entered into this clinic. If this
+ * instance is ever pointed at genuine patient data, this block has to go and
+ * the seeded accounts have to be deleted.
  */
 const DEMO_ACCOUNTS: Array<{ role: MessageKey; email: string; password: string }> = [
   { role: "role.admin", email: "admin@twinrx.example", password: "DemoAdminPass123!" },
@@ -35,11 +41,6 @@ const DEMO_ACCOUNTS: Array<{ role: MessageKey; email: string; password: string }
   // patient-facing twin has something to show straight away.
   { role: "role.patient", email: "patient2@twinrx.example", password: "DemoPatientPass123!" },
 ];
-
-function isLocalApi(): boolean {
-  const url = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
-  return url.includes("localhost") || url.includes("127.0.0.1");
-}
 
 const fieldClass =
   "w-full rounded-md border bg-ink/[0.035] px-3 py-2.5 text-[15px] text-ink outline-none transition focus:border-signal";
@@ -162,33 +163,47 @@ export default function LoginPage() {
           </p>
         </form>
 
-        {isLocalApi() && (
-          <div className="panel-sunken mt-4 p-4">
-            <p className="readout">{t("login.demoClinic")}</p>
-            <ul className="mt-3 flex flex-col gap-1.5">
-              {DEMO_ACCOUNTS.map((account) => (
-                <li key={account.email}>
-                  <button
-                    type="button"
-                    disabled={loading}
-                    onClick={() => {
-                      setEmail(account.email);
-                      setPassword(account.password);
-                      signIn(account.email, account.password);
-                    }}
-                    className="flex w-full items-center justify-between gap-3 rounded px-2 py-1.5 text-left transition hover:bg-ink/[0.04] disabled:opacity-60"
-                  >
-                    <span className="text-[13px] text-ink">{t(account.role)}</span>
-                    <span className="font-mono text-[11px] text-ink-faint">{account.email}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-[11px] leading-relaxed text-ink-faint">
-              {t("login.demoNote")}
-            </p>
-          </div>
-        )}
+        <div className="panel-sunken mt-4 p-4">
+          <p className="label">{t("login.demoClinic")}</p>
+          <ul className="mt-3 flex flex-col gap-1">
+            {DEMO_ACCOUNTS.map((account) => (
+              <li key={account.email}>
+                {/* The whole row signs in, so a reviewer never has to retype a
+                    credential; the values stay visible for anyone who would
+                    rather type them into another browser or a REST client. */}
+                <button
+                  type="button"
+                  disabled={loading}
+                  title={t("login.demoFill")}
+                  onClick={() => {
+                    setEmail(account.email);
+                    setPassword(account.password);
+                    signIn(account.email, account.password);
+                  }}
+                  className="w-full rounded px-2 py-2 text-left transition hover:bg-ink/[0.05] disabled:opacity-60"
+                >
+                  <span className="flex items-baseline justify-between gap-3">
+                    <span className="text-[14px] font-medium text-ink">{t(account.role)}</span>
+                    <span className="readout-value shrink-0 text-[11px] text-signal">
+                      {t("login.demoFill")}
+                    </span>
+                  </span>
+                  <span className="mt-1 flex flex-col gap-0.5">
+                    <span className="readout-value text-[11px] text-ink-muted">
+                      {account.email}
+                    </span>
+                    <span className="readout-value text-[11px] text-ink-faint">
+                      {account.password}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[11px] leading-relaxed text-ink-faint">
+            {t("login.demoNote")}
+          </p>
+        </div>
       </motion.div>
     </main>
   );

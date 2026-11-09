@@ -70,8 +70,8 @@ export const en: Record<MessageKey, string> = {
   "login.registerPrompt": "Registering a clinic?",
   "login.registerLink": "Start the 7-day demo",
   "login.demoClinic": "Demo clinic · synthetic data",
-  "login.demoNote":
-    "Every patient in this clinic is fictional. Shown because the app is pointed at a local API.",
+  "login.demoFill": "Sign in",
+  "login.demoNote": "Every patient in this clinic is fictional. These logins are public and shared for the demo — never enter real patient data here.",
 
   "chart.tabChart": "Chart",
   "chart.tabDeep": "Deep analysis",
