@@ -1,4 +1,13 @@
 {
+  // Requires TypeScript 5.x, pinned exactly in package.json.
+  //
+  // "moduleResolution": "node" (reported by the compiler as node10) was removed
+  // in TypeScript 6. A build that picks up 6 or newer fails here with
+  // "Option 'moduleResolution=node10' has been removed" — which is what an
+  // unpinned CI install did. Bumping the compiler past 5.x means moving to
+  // "module": "node16" + "moduleResolution": "node16", and that is not a
+  // drop-in: node16 applies ESM resolution rules, so relative imports need
+  // explicit file extensions. Do that deliberately, not as part of a version bump.
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
