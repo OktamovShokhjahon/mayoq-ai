@@ -12,16 +12,23 @@ services:
     runtime: node
     plan: free
     region: frankfurt
+    # `--include=dev` is load-bearing. NODE_ENV=production is set below for the
+    # running service, and npm reads NODE_ENV at install time too: under it npm
+    # defaults to omit=dev and silently skips every devDependency — including
+    # typescript. `tsc` then resolves to whatever compiler happens to be on the
+    # build image rather than the pinned one, and the build fails on a compiler
+    # option that a newer TypeScript removed. The failure names the tsconfig,
+    # so it reads as a config error; it is a missing-dependency error.
+    #
     # `npm ci`, not `npm install`: ci installs exactly what package-lock.json
     # pins and fails if the lockfile and manifests disagree, so the build uses
-    # the same compiler and dependency tree that was tested locally. An earlier
-    # `npm install` here resolved a TypeScript newer than the one this repo
-    # builds with and the build failed on a compiler option removed in 6.x.
+    # the dependency tree that was tested locally. It also clears node_modules
+    # first, so a bad cached install cannot survive into the next deploy.
     #
     # Workspace-aware: the API is one package in an npm workspaces repo, so the
     # root manifest is installed alongside it. Installing only apps/api would
     # miss the hoisted dependencies.
-    buildCommand: npm ci --workspace=@twinrx/api --include-workspace-root && npm run build --workspace=@twinrx/api
+    buildCommand: npm ci --include=dev --workspace=@twinrx/api --include-workspace-root && npm run build --workspace=@twinrx/api
     startCommand: node apps/api/dist/server.js
     # The API answers /health with {status:"ok"} without touching Mongo, so a
     # database blip does not get the whole service restarted.
